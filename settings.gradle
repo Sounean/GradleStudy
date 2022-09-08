@@ -1,0 +1,39 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "GradleStudy"
+include ':app'
+
+// 添加 构建的生命周期 监听
+gradle.addBuildListener(new BuildAdapter(){
+
+    @Override
+    void settingsEvaluated(Settings settings) {
+        super.settingsEvaluated(settings)
+        println("初始化阶段完成")
+    }
+
+    @Override
+    void projectsEvaluated(Gradle gradle) {
+        super.projectsEvaluated(gradle)
+        println("配置阶段完成")
+    }
+
+    @Override
+    void buildFinished(BuildResult result) {
+        super.buildFinished(result)
+        println("构建结束")
+    }
+
+})

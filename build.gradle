@@ -1,0 +1,91 @@
+
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '7.2.1' apply false
+    id 'com.android.library' version '7.2.1' apply false
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+println("Proj下的build。gradle")
+
+// 打印一句话
+def c = { println("Hello Closure")}
+c()
+
+// 有一个的参数的时候，参数可以忽略，默认名称为 it
+def c2 = { println("c2: it = $it") }
+c2("imooc")
+
+// 只有一个参数的时候，名称可以任意指定，但是it就不可用了
+def c3 = { name -> println("c3: name = $name") }
+c3("imooc")
+
+// 定义多个参数，需要用逗号分隔
+def c4 = { name1, name2 ->
+    println("c4: name1 = $name1")
+    println("c4: name2 = $name2")
+}
+c4("imooc_1", "imooc_2")
+
+def list = [1, 3, 5, 7, 9]
+list.each { println("item = $it") }
+
+/////////////////////////////////////
+
+def myAndroid = {
+    compileSdkVersion 27
+    defaultConfig {
+        versionName "1.0"
+    }
+}
+
+Android a = new Android()
+// 将闭包与具体对象关联起来
+myAndroid.delegate = a
+myAndroid.call()
+
+println("myAndroid = $a")
+
+class DefaultConfig {
+
+    private String versionName
+
+    def versionName(String versionName) {
+        this.versionName = versionName
+    }
+
+    @Override
+    String toString() {
+        return " DefaultConfig{ versionName = $versionName }"
+    }
+
+}
+
+class Android {
+    private int compileSdkVersion
+    private DefaultConfig defaultConfig
+
+    Android() {
+        this.defaultConfig = new DefaultConfig()
+    }
+
+    def compileSdkVersion(int compileSdkVersion) {
+        this.compileSdkVersion = compileSdkVersion
+    }
+
+    def defaultConfig(Closure closure) {
+        // 将闭包与具体对象关联起来
+        closure.setDelegate(defaultConfig)
+        closure.call()
+    }
+
+    @Override
+    String toString() {
+        return "Android { compileSdkVersion = $compileSdkVersion, " +
+                "defaultConfig = $defaultConfig}"
+    }
+
+}
